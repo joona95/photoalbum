@@ -31,7 +31,7 @@ public class Photo {
     private Date uploadedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ablum_id")
+    @JoinColumn(name = "album_id")
     private Album album;
 
     public Photo() {}
