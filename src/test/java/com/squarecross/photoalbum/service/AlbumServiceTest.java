@@ -28,4 +28,14 @@ class AlbumServiceTest {
         Album resAlbum = albumService.getAlbum(savedAlbum.getAlbumId());
         assertEquals("테스트", resAlbum.getAlbumName());
     }
+
+    @Test
+    void getAlbumByAlbumName() {
+        Album album = new Album();
+        album.setAlbumName("테스트");
+        Album savedAlbum = albumRepository.save(album);
+
+        Album resAlbum = albumService.getAlbumByAlbumName("테스트");
+        assertEquals(savedAlbum.getAlbumId(), resAlbum.getAlbumId());
+    }
 }
