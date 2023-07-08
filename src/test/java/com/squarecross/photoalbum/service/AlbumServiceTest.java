@@ -45,4 +45,9 @@ class AlbumServiceTest {
         Album resAlbum = albumService.getAlbumByAlbumName("테스트");
         assertEquals(savedAlbum.getAlbumId(), resAlbum.getAlbumId());
     }
+
+    @Test
+    void getAlbumByAlbumNameException() {
+        assertThrows(EntityNotFoundException.class, () -> albumService.getAlbumByAlbumName("없음"));
+    }
 }
