@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -27,6 +29,11 @@ class AlbumServiceTest {
 
         Album resAlbum = albumService.getAlbum(savedAlbum.getAlbumId());
         assertEquals("테스트", resAlbum.getAlbumName());
+    }
+
+    @Test
+    void getAlbumException() {
+        assertThrows(EntityNotFoundException.class, () -> albumService.getAlbum(99L));
     }
 
     @Test
