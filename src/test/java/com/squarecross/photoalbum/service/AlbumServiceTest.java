@@ -1,6 +1,7 @@
 package com.squarecross.photoalbum.service;
 
 import com.squarecross.photoalbum.domain.Album;
+import com.squarecross.photoalbum.dto.AlbumDto;
 import com.squarecross.photoalbum.repository.AlbumRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ class AlbumServiceTest {
         album.setAlbumName("테스트");
         Album savedAlbum = albumRepository.save(album);
 
-        Album resAlbum = albumService.getAlbum(savedAlbum.getAlbumId());
+        AlbumDto resAlbum = albumService.getAlbum(savedAlbum.getAlbumId());
         assertEquals("테스트", resAlbum.getAlbumName());
     }
 
@@ -42,7 +43,7 @@ class AlbumServiceTest {
         album.setAlbumName("테스트");
         Album savedAlbum = albumRepository.save(album);
 
-        Album resAlbum = albumService.getAlbumByAlbumName("테스트");
+        AlbumDto resAlbum = albumService.getAlbumByAlbumName("테스트");
         assertEquals(savedAlbum.getAlbumId(), resAlbum.getAlbumId());
     }
 
