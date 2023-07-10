@@ -1,5 +1,6 @@
 package com.squarecross.photoalbum.service;
 
+import com.squarecross.photoalbum.Constants;
 import com.squarecross.photoalbum.domain.Album;
 import com.squarecross.photoalbum.domain.Photo;
 import com.squarecross.photoalbum.dto.AlbumDto;
@@ -11,6 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,5 +80,20 @@ class AlbumServiceTest {
         AlbumDto resAlbum = albumService.getAlbum(savedAlbum.getAlbumId());
 
         assertEquals(resAlbum.getCount(), 2);
+    }
+
+    @Test
+    void testAlbumCreate() throws IOException {
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("테스트 앨범");
+
+        AlbumDto savedAlbum = albumService.crateAlbum(albumDto);
+
+        assertEquals(albumDto.getAlbumName(), savedAlbum.getAlbumName());
+        assertTrue(Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbum.getAlbumId())));
+        assertTrue(Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbum.getAlbumId())));
+
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbum.getAlbumId()));
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbum.getAlbumId()));
     }
 }
