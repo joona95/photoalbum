@@ -97,4 +97,20 @@ public class AlbumService {
         Album savedAlbum = albumRepository.save(updatedAlbum);
         return AlbumMapper.convertToDto(savedAlbum);
     }
+
+    public void deleteAlbum(Long albumId) throws IOException {
+        Optional<Album> album = albumRepository.findById(albumId);
+        if (album.isEmpty()) {
+            throw new NoSuchElementException(String.format("Album ID '%d'가 존재하지 않습니다.", albumId));
+        }
+
+        Album deleteAlbum = album.get();
+        albumRepository.delete(deleteAlbum);
+        deleteAlbumDirectories(deleteAlbum);
+    }
+
+    public void deleteAlbumDirectories(Album album) throws IOException {
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + album.getAlbumId()));
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + album.getAlbumId()));
+    }
 }
