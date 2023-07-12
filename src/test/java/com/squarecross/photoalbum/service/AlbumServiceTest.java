@@ -111,5 +111,8 @@ class AlbumServiceTest {
         AlbumDto updatedDto = albumService.getAlbum(albumId);
 
         assertEquals("변경후", updatedDto.getAlbumName());
+
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + updatedDto.getAlbumId()));
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + updatedDto.getAlbumId()));
     }
 }
