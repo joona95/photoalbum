@@ -37,7 +37,7 @@ public class AlbumController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<AlbumDto> createAlbum(@RequestBody final AlbumDto albumDto) throws IOException {
-        AlbumDto savedAlbum = albumService.crateAlbum(albumDto);
+        AlbumDto savedAlbum = albumService.createAlbum(albumDto);
         return new ResponseEntity<>(savedAlbum, HttpStatus.OK);
     }
 

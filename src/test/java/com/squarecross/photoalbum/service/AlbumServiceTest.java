@@ -87,7 +87,7 @@ class AlbumServiceTest {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setAlbumName("테스트 앨범");
 
-        AlbumDto savedAlbum = albumService.crateAlbum(albumDto);
+        AlbumDto savedAlbum = albumService.createAlbum(albumDto);
 
         assertEquals(albumDto.getAlbumName(), savedAlbum.getAlbumName());
         assertTrue(Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbum.getAlbumId())));

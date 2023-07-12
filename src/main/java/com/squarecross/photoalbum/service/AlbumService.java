@@ -51,7 +51,7 @@ public class AlbumService {
         }
     }
 
-    public AlbumDto crateAlbum(AlbumDto albumDto) throws IOException {
+    public AlbumDto createAlbum(AlbumDto albumDto) throws IOException {
         Album album = AlbumMapper.convertToModel(albumDto);
         albumRepository.save(album);
         createAlbumDirectories(album);
