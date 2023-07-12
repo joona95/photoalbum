@@ -16,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,5 +115,24 @@ class AlbumServiceTest {
 
         Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + updatedDto.getAlbumId()));
         Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + updatedDto.getAlbumId()));
+    }
+
+    @Test
+    void testAlbumDelete() throws IOException {
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("테스트 앨범");
+
+        AlbumDto savedAlbum = albumService.createAlbum(albumDto);
+
+        albumService.deleteAlbum(savedAlbum.getAlbumId());
+
+        assertTrue(albumRepository.findById(savedAlbum.getAlbumId()).isEmpty());
+        assertFalse(Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbum.getAlbumId())));
+        assertFalse(Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbum.getAlbumId())));
+    }
+
+    @Test
+    void testAlbumDeleteFail() {
+        assertThrows(NoSuchElementException.class, () -> albumService.deleteAlbum(99L));
     }
 }
