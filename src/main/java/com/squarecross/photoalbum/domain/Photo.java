@@ -12,7 +12,7 @@ public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "photo_id", unique = true, nullable = false)
-    private Long albumId;
+    private Long photoId;
 
     @Column(name = "file_name", unique = false, nullable = true)
     private String fileName;
@@ -37,12 +37,12 @@ public class Photo {
     public Photo() {}
 
 
-    public Long getAlbumId() {
-        return albumId;
+    public Long getPhotoId() {
+        return photoId;
     }
 
-    public void setAlbumId(Long albumId) {
-        this.albumId = albumId;
+    public void setPHotoId(Long photoId) {
+        this.photoId = photoId;
     }
 
     public String getFileName() {
