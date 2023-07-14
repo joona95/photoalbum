@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -80,11 +81,21 @@ public class PhotoService {
 
     private void saveFile(MultipartFile file, Long albumId, String fileName) {
         try {
+            if (!Objects.requireNonNull(file.getContentType()).startsWith("image")) {
+                throw new IllegalArgumentException("No Image Extension");
+            }
             String filePath = albumId + "/" + fileName;
             Files.copy(file.getInputStream(), Paths.get(original_path + "/" + filePath));
+            File originalFile = new File(original_path + "/" + filePath);
+            if (!originalFile.exists() || !originalFile.isFile()) {
+                throw new RuntimeException("No file exists in " + filePath);
+            }
 
             BufferedImage thumbImg = Scalr.resize(ImageIO.read(file.getInputStream()), Constants.THUMB_SIZE, Constants.THUMB_SIZE);
             File thumbFile = new File(thumb_path + "/" + filePath);
+            if (!thumbFile.exists() || !thumbFile.isFile()) {
+                throw new RuntimeException("No file exists in " + filePath);
+            }
             String ext = StringUtils.getFilenameExtension(fileName);
             if (ext == null) {
                 throw new IllegalArgumentException("No Extension");
