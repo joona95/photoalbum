@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/albums/{albumId}/photos")
@@ -45,6 +47,25 @@ public class PhotoController {
                 OutputStream outputStream = response.getOutputStream();
                 IOUtils.copy(new FileInputStream(file), outputStream);
                 outputStream.close();
+            } else {
+                ZipOutputStream outputStream = new ZipOutputStream(response.getOutputStream());
+                for (Long photoId : photoIds) {
+                    File file = photoService.getImageFile(photoId);
+                    ZipEntry ze = new ZipEntry(file.getName());
+                    outputStream.putNextEntry(ze);
+                    IOUtils.copy(new FileInputStream(file), outputStream);
+                    /*
+                    FileInputStream inputStream = new FileInputStream(file);
+                    byte buffer[] = new byte[1024];
+                    int len;
+                    while((len = inputStream.read(buffer, 0, 1024)) != -1) {
+                        outputStream.write(buffer, 0, len);
+                    }
+                    inputStream.close();
+                     */
+                    outputStream.closeEntry();
+                }
+                outputStream.close();;
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Error");
