@@ -105,4 +105,12 @@ public class PhotoService {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
     }
+
+    public File getImageFile(Long photoId) {
+        Optional<Photo> photo = photoRepository.findById(photoId);
+        if (photo.isEmpty()) {
+            throw new EntityNotFoundException(String.format("사진 ID %d를 찾을 수 없습니다.", photoId));
+        }
+        return new File(Constants.PATH_PREFIX + photo.get().getOriginalUrl());
+    }
 }
