@@ -150,4 +150,23 @@ public class PhotoService {
         }
         return new File(Constants.PATH_PREFIX + photo.get().getOriginalUrl());
     }
+
+    public void deletePhoto(Long albumId, Long photoId) {
+        Photo photo = photoRepository.findByAlbum_AlbumIdAndPhotoId(albumId, photoId).orElseThrow(() -> {
+            throw new EntityNotFoundException("해당 앨범에 사진이 존재하지 않습니다");
+        });
+        deleteFile(albumId, photo.getFileName());
+        photoRepository.delete(photo);
+    }
+
+    public void deleteFile(Long albumId, String fileName) {
+        try {
+            Path originPath = Paths.get(original_path + "/" + albumId + "/" + fileName);
+            Path thumbPath = Paths.get(thumb_path + "/" + albumId + "/" + fileName);
+            Files.deleteIfExists(originPath);
+            Files.deleteIfExists(thumbPath);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+        }
+    }
 }

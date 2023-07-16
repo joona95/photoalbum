@@ -89,4 +89,13 @@ public class PhotoController {
         List<PhotoDto> photos = photoService.getPhotos(photoDto.getFromAlbumId(), "byDate");
         return new ResponseEntity<>(photos, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    public ResponseEntity<List<PhotoDto>> deletePhotos(@PathVariable final Long albumId, @RequestBody final PhotoDto photoDto) {
+        for (Long photoId : photoDto.getPhotoIds()) {
+            photoService.deletePhoto(albumId, photoId);
+        }
+        List<PhotoDto> photos = photoService.getPhotos(albumId, "byDate");
+        return new ResponseEntity<>(photos, HttpStatus.OK);
+    }
 }
