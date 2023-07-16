@@ -18,6 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,32 @@ public class PhotoService {
             throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
         }
         return PhotoMapper.convertToDtoList(photos);
+    }
+
+    public void movePhoto(Long fromAlbumId, Long toAlbumId, Long photoId) {
+        Photo photo = photoRepository.findByAlbum_AlbumIdAndPhotoId(fromAlbumId, photoId).orElseThrow(() -> {
+            throw new EntityNotFoundException("해당 앨범에 사진이 존재하지 않습니다");
+        });
+        Album toAlbum = albumRepository.findById(toAlbumId).orElseThrow(() -> {
+            throw new EntityNotFoundException("앨범이 존재하지 않습니다");
+        });
+
+        moveFile(fromAlbumId, toAlbumId, photo.getFileName());
+        photo.setAlbum(toAlbum);
+        photoRepository.save(photo);
+    }
+
+    public void moveFile(Long fromAlbumId, Long toAlbumId, String fileName) {
+        try {
+            Path originPath = Paths.get(original_path + "/" + fromAlbumId + "/" + fileName);
+            Path originPathToMove = Paths.get(original_path + "/" + toAlbumId + "/" + fileName);
+            Files.move(originPath, originPathToMove);
+            Path thumbPath = Paths.get(thumb_path + "/" + fromAlbumId + "/" + fileName);
+            Path thumbPathToMove = Paths.get(thumb_path + "/" + toAlbumId + "/" + fileName);
+            Files.move(thumbPath, thumbPathToMove);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+        }
     }
 
     public PhotoDto savePhoto(MultipartFile file, Long albumId) {

@@ -65,7 +65,7 @@ public class PhotoController {
                      */
                     outputStream.closeEntry();
                 }
-                outputStream.close();;
+                outputStream.close();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Error");
@@ -76,8 +76,17 @@ public class PhotoController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<PhotoDto>> getPhotos(@PathVariable("albumId") final long albumId,
-                                                    @RequestParam(value="sort", required = false, defaultValue = "byDate") final String sort) {
+                                                    @RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort) {
         List<PhotoDto> photos = photoService.getPhotos(albumId, sort);
+        return new ResponseEntity<>(photos, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/move", method = RequestMethod.PATCH)
+    public ResponseEntity<List<PhotoDto>> movePhotos(@RequestBody final PhotoDto photoDto) {
+        for (Long photoId : photoDto.getPhotoIds()) {
+            photoService.movePhoto(photoDto.getFromAlbumId(), photoDto.getToAlbumId(), photoId);
+        }
+        List<PhotoDto> photos = photoService.getPhotos(photoDto.getFromAlbumId(), "byDate");
         return new ResponseEntity<>(photos, HttpStatus.OK);
     }
 }

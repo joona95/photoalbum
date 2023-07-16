@@ -1,6 +1,9 @@
 package com.squarecross.photoalbum.dto;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.Date;
+import java.util.List;
 
 public class PhotoDto {
     private Long photoId;
@@ -10,6 +13,10 @@ public class PhotoDto {
     private String thumbUrl;
     private Date uploadedAt;
     private Long albumId;
+
+    private long fromAlbumId;
+    private long toAlbumId;
+    private List<Long> photoIds;
 
     public Long getPhotoId() {
         return photoId;
@@ -65,5 +72,29 @@ public class PhotoDto {
 
     public void setAlbumId(Long albumId) {
         this.albumId = albumId;
+    }
+
+    public long getFromAlbumId() {
+        return fromAlbumId;
+    }
+
+    public void setFromAlbumId(long fromAlbumId) {
+        this.fromAlbumId = fromAlbumId;
+    }
+
+    public long getToAlbumId() {
+        return toAlbumId;
+    }
+
+    public void setToAlbumId(long toAlbumId) {
+        this.toAlbumId = toAlbumId;
+    }
+
+    public List<Long> getPhotoIds() {
+        return photoIds;
+    }
+
+    public void setPhotoIds(List<Long> photoIds) {
+        this.photoIds = photoIds;
     }
 }
