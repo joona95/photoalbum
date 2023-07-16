@@ -73,4 +73,11 @@ public class PhotoController {
             throw new RuntimeException(e);
         }
     }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<PhotoDto>> getPhotos(@PathVariable("albumId") final long albumId,
+                                                    @RequestParam(value="sort", required = false, defaultValue = "byDate") final String sort) {
+        List<PhotoDto> photos = photoService.getPhotos(albumId, sort);
+        return new ResponseEntity<>(photos, HttpStatus.OK);
+    }
 }

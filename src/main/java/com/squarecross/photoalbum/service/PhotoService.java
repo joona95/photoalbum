@@ -17,22 +17,20 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class PhotoService {
-    @Autowired
-    private PhotoRepository photoRepository;
-
-    @Autowired
-    private AlbumRepository albumRepository;
-
     private final String original_path = Constants.PATH_PREFIX + "/photos/original";
     private final String thumb_path = Constants.PATH_PREFIX + "/photos/thumb";
+    @Autowired
+    private PhotoRepository photoRepository;
+    @Autowired
+    private AlbumRepository albumRepository;
 
     public PhotoDto getPhoto(Long photoId) {
         Optional<Photo> photo = photoRepository.findById(photoId);
@@ -43,13 +41,25 @@ public class PhotoService {
         }
     }
 
+    public List<PhotoDto> getPhotos(Long albumId, String sort) {
+        List<Photo> photos;
+        if (Objects.equals("byName", sort)) {
+            photos = photoRepository.findByAlbum_AlbumIdOrderByFileName(albumId);
+        } else if (Objects.equals("byDate", sort)) {
+            photos = photoRepository.findByAlbum_AlbumIdOrderByUploadedAt(albumId);
+        } else {
+            throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
+        }
+        return PhotoMapper.convertToDtoList(photos);
+    }
+
     public PhotoDto savePhoto(MultipartFile file, Long albumId) {
         Optional<Album> album = albumRepository.findById(albumId);
         if (album.isEmpty()) {
             throw new EntityNotFoundException("앨범이 존재하지 않습니다");
         }
         String fileName = file.getOriginalFilename();
-        int fileSize = (int)file.getSize();
+        int fileSize = (int) file.getSize();
         fileName = getNextFileName(fileName, albumId);
         saveFile(file, albumId, fileName);
 

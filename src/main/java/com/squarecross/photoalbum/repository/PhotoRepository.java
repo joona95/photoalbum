@@ -14,4 +14,8 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findTop4ByAlbum_AlbumIdOrderByUploadedAtDesc(Long albumId);
 
     Optional<Photo> findByFileNameAndAlbum_AlbumId(String photoName, Long albumId);
+
+    List<Photo> findByAlbum_AlbumIdOrderByUploadedAt(Long albumId);
+
+    List<Photo> findByAlbum_AlbumIdOrderByFileName(Long albumId);
 }
